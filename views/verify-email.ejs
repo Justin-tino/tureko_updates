@@ -1,0 +1,38 @@
+<%- include('partials/header') %>
+
+<section class="auth-page">
+  <div class="verify-container">
+    <div class="verify-card">
+      <div class="verify-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="2" y="4" width="20" height="16" rx="2"/>
+          <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>
+        </svg>
+      </div>
+      <h1>Verify your email</h1>
+      <p>We've sent a verification link to <strong id="verifyEmailAddr"></strong>. Please check your inbox and click the link to activate your account.</p>
+
+      <div class="verify-status" id="verifyStatus">
+        <div class="verify-spinner"></div>
+        <span>Waiting for verification…</span>
+      </div>
+
+      <button type="button" class="btn-outline verify-resend" id="resendBtn">Resend Verification Email</button>
+
+      <p class="verify-note">Didn't receive it? Check your spam folder or try resending.</p>
+
+      <a href="/signin" class="auth-back-link">← Back to Sign In</a>
+    </div>
+  </div>
+</section>
+
+<!-- Firebase Client SDK (compat) -->
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+
+<script>
+  window.__FIREBASE_CONFIG__ = <%- firebaseConfig %>;
+</script>
+<script src="/js/auth.js"></script>
+
+<%- include('partials/footer') %>

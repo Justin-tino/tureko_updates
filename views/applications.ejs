@@ -1,0 +1,66 @@
+<%- include('partials/header') %>
+
+<section class="auth-page">
+  <div class="platform-container">
+    <div class="platform-header reveal">
+      <a href="/dashboard" class="platform-back">← Dashboard</a>
+      <h1><%= user.role === 'business' ? 'Applications Received' : 'My Applications' %></h1>
+      <p class="platform-subtitle"><%= user.role === 'business' ? 'Review and manage applicant submissions' : 'Track your submitted applications' %></p>
+    </div>
+
+    <% if (applications.length === 0) { %>
+    <div class="platform-empty reveal reveal-delay">
+      <div class="platform-empty-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+      </div>
+      <h3><%= user.role === 'business' ? 'No applications received yet' : 'No applications submitted yet' %></h3>
+      <p><%= user.role === 'business' ? 'Applications will appear here when candidates apply to your jobs.' : 'Browse the job board to find opportunities.' %></p>
+      <% if (user.role === 'applicant') { %>
+      <a href="/jobs" class="btn-submit">Browse Jobs</a>
+      <% } %>
+    </div>
+    <% } else { %>
+    <div class="application-list reveal reveal-delay">
+      <% applications.forEach(function(app) { %>
+      <div class="application-card">
+        <div class="application-card-top">
+          <div>
+            <% if (user.role === 'business') { %>
+            <h4><%= app.applicantName %></h4>
+            <p class="application-email"><%= app.applicantEmail %></p>
+            <% } else { %>
+            <h4><%= app.jobTitle %></h4>
+            <% } %>
+          </div>
+          <span class="status-badge status-<%= app.status %>"><%= app.status %></span>
+        </div>
+        <% if (app.coverLetter) { %>
+        <p class="application-cover"><%= app.coverLetter.substring(0, 200) %><%= app.coverLetter.length > 200 ? '...' : '' %></p>
+        <% } %>
+        <div class="application-card-bottom">
+          <span class="application-date">
+            <% if (app.createdAt) { %>
+            Applied <%= new Date(app.createdAt._seconds * 1000).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) %>
+            <% } %>
+          </span>
+          <% if (user.role === 'business') { %>
+          <form method="POST" action="/applications/<%= app.id %>/status" class="application-status-form">
+            <input type="hidden" name="returnTo" value="/applications" />
+            <select name="status" onchange="this.form.submit()">
+              <option value="pending" <%= app.status === 'pending' ? 'selected' : '' %>>Pending</option>
+              <option value="reviewed" <%= app.status === 'reviewed' ? 'selected' : '' %>>Reviewed</option>
+              <option value="accepted" <%= app.status === 'accepted' ? 'selected' : '' %>>Accepted</option>
+              <option value="rejected" <%= app.status === 'rejected' ? 'selected' : '' %>>Rejected</option>
+            </select>
+          </form>
+          <% } %>
+          <a href="/jobs/<%= app.jobId %>" class="application-view-link">View Job →</a>
+        </div>
+      </div>
+      <% }); %>
+    </div>
+    <% } %>
+  </div>
+</section>
+
+<%- include('partials/footer') %>

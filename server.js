@@ -2,8 +2,10 @@ require('dotenv').config();
 const express = require('express');
 const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
+const cookieParser = require('cookie-parser');
 const path = require('path');
 const { initFirebase } = require('./config/firebase');
+const { attachUser } = require('./middleware/auth');
 
 const app = express();
 
@@ -18,8 +20,22 @@ app.use(
         defaultSrc: ["'self'"],
         styleSrc: ["'self'", "'unsafe-inline'", 'https://fonts.googleapis.com'],
         fontSrc: ["'self'", 'https://fonts.gstatic.com'],
-        scriptSrc: ["'self'", "'unsafe-inline'"],
-        imgSrc: ["'self'", 'data:', 'https://storage.googleapis.com'],
+        scriptSrc: [
+          "'self'",
+          "'unsafe-inline'",
+          'https://www.gstatic.com',
+          'https://apis.google.com',
+          'https://accounts.google.com',
+        ],
+        imgSrc: ["'self'", 'data:', 'https://storage.googleapis.com', 'https://lh3.googleusercontent.com', 'https://*.googleusercontent.com'],
+        frameSrc: ["'self'", 'https://accounts.google.com', 'https://*.firebaseapp.com', 'https://*.firebaseio.com'],
+        connectSrc: [
+          "'self'",
+          'https://identitytoolkit.googleapis.com',
+          'https://securetoken.googleapis.com',
+          'https://www.googleapis.com',
+          'https://accounts.google.com',
+        ],
       },
     },
   })
@@ -37,6 +53,7 @@ app.use(globalLimiter);
 // Body parsing (limit size)
 app.use(express.urlencoded({ extended: true, limit: '10kb' }));
 app.use(express.json({ limit: '10kb' }));
+app.use(cookieParser());
 
 // Static files
 app.use(express.static(path.join(__dirname, 'public')));
@@ -45,9 +62,16 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 
+// Attach user to all requests (non-blocking)
+app.use(attachUser);
+
 // Routes
 const routes = require('./routes/index');
+const authRoutes = require('./routes/auth');
+const platformRoutes = require('./routes/platform');
 app.use('/', routes);
+app.use('/', authRoutes);
+app.use('/', platformRoutes);
 
 // 404 handler
 app.use((req, res) => {

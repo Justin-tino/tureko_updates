@@ -1,0 +1,119 @@
+<%- include('partials/header') %>
+
+<section class="auth-page">
+  <div class="platform-container">
+    <div class="platform-header reveal">
+      <a href="/jobs" class="platform-back">← <%= user.role === 'business' ? 'My Job Listings' : 'Job Board' %></a>
+      <div class="job-detail-heading">
+        <h1><%= job.title %></h1>
+        <% if (user.role === 'business' && job.businessId === user.uid) { %>
+        <form method="POST" action="/jobs/<%= job.id %>/status" class="job-status-toggle">
+          <button type="submit" class="btn-outline btn-sm"><%= job.status === 'open' ? 'Close Job' : 'Reopen Job' %></button>
+        </form>
+        <% } %>
+      </div>
+      <div class="job-detail-meta">
+        <span class="job-meta-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+          <%= job.businessName %>
+        </span>
+        <span class="job-meta-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          <%= job.location %>
+        </span>
+        <span class="job-meta-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          <%= job.type %>
+        </span>
+        <% if (job.category) { %>
+        <span class="job-meta-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+          <%= job.category %>
+        </span>
+        <% } %>
+        <span class="status-badge status-<%= job.status %>"><%= job.status %></span>
+      </div>
+    </div>
+
+    <div class="job-detail-body reveal reveal-delay">
+      <% if (job.salaryRange) { %>
+      <div class="job-detail-salary">
+        <strong>Salary Range:</strong> <%= job.salaryRange %>
+      </div>
+      <% } %>
+
+      <div class="job-detail-section">
+        <h3>Description</h3>
+        <div class="job-detail-text"><%= job.description %></div>
+      </div>
+
+      <% if (job.requirements) { %>
+      <div class="job-detail-section">
+        <h3>Requirements</h3>
+        <div class="job-detail-text"><%= job.requirements %></div>
+      </div>
+      <% } %>
+    </div>
+
+    <% if (user.role === 'applicant' && job.status === 'open') { %>
+    <div class="job-apply-section reveal">
+      <% if (alreadyApplied) { %>
+      <div class="platform-alert platform-alert-success">
+        ✓ You have already applied to this position. Check your <a href="/applications">applications</a> for status updates.
+      </div>
+      <% } else { %>
+      <h3>Apply for this Position</h3>
+      <form method="POST" action="/jobs/<%= job.id %>/apply" class="platform-form">
+        <div class="form-group">
+          <label for="coverLetter">Cover Letter <span class="form-hint">(optional but recommended)</span></label>
+          <textarea id="coverLetter" name="coverLetter" rows="5" placeholder="Tell the employer why you're a great fit for this role..."></textarea>
+        </div>
+        <div class="form-actions">
+          <button type="submit" class="btn-submit">Submit Application</button>
+        </div>
+      </form>
+      <% } %>
+    </div>
+    <% } %>
+
+    <% if (user.role === 'business' && job.businessId === user.uid && applications.length > 0) { %>
+    <div class="job-applications-section reveal">
+      <h3>Applications (<%= applications.length %>)</h3>
+      <div class="application-list">
+        <% applications.forEach(function(app) { %>
+        <div class="application-card">
+          <div class="application-card-top">
+            <div>
+              <h4><%= app.applicantName %></h4>
+              <p class="application-email"><%= app.applicantEmail %></p>
+            </div>
+            <span class="status-badge status-<%= app.status %>"><%= app.status %></span>
+          </div>
+          <% if (app.coverLetter) { %>
+          <p class="application-cover"><%= app.coverLetter %></p>
+          <% } %>
+          <div class="application-card-bottom">
+            <span class="application-date">
+              <% if (app.createdAt) { %>
+              Applied <%= new Date(app.createdAt._seconds * 1000).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) %>
+              <% } %>
+            </span>
+            <form method="POST" action="/applications/<%= app.id %>/status" class="application-status-form">
+              <input type="hidden" name="returnTo" value="/jobs/<%= job.id %>" />
+              <select name="status" onchange="this.form.submit()">
+                <option value="pending" <%= app.status === 'pending' ? 'selected' : '' %>>Pending</option>
+                <option value="reviewed" <%= app.status === 'reviewed' ? 'selected' : '' %>>Reviewed</option>
+                <option value="accepted" <%= app.status === 'accepted' ? 'selected' : '' %>>Accepted</option>
+                <option value="rejected" <%= app.status === 'rejected' ? 'selected' : '' %>>Rejected</option>
+              </select>
+            </form>
+          </div>
+        </div>
+        <% }); %>
+      </div>
+    </div>
+    <% } %>
+  </div>
+</section>
+
+<%- include('partials/footer') %>

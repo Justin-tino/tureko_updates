@@ -4,7 +4,7 @@ A full-stack, production-ready sustainability agency website built with Node.js,
 
 ---
 
-## 🚀 Quick Start
+## Quick Start
 
 ### 1. Install Dependencies
 ```bash
@@ -34,7 +34,7 @@ npm run dev
 
 ---
 
-## ⚙️ Environment Variables
+## Environment Variables
 
 | Variable | Description |
 |---|---|
@@ -52,7 +52,7 @@ npm run dev
 
 ---
 
-## 🔥 Firebase Setup
+## Firebase Setup
 
 ### 1. Create Firebase Project
 - Go to [console.firebase.google.com](https://console.firebase.google.com)
@@ -81,7 +81,7 @@ firebase deploy --only storage
 
 ---
 
-## 📧 Gmail Setup
+## Gmail Setup
 
 1. Enable 2-Factor Authentication on your Gmail account
 2. Go to Google Account → Security → App Passwords
@@ -90,7 +90,7 @@ firebase deploy --only storage
 
 ---
 
-## 🏗️ Project Structure
+## Project Structure
 
 ```
 tureko/
@@ -128,7 +128,7 @@ tureko/
 
 ---
 
-## 🔒 Security Features
+## Security Features
 
 - **Helmet.js** — Secure HTTP headers
 - **express-rate-limit** — Rate limiting on form routes (10 req / 15 min)
@@ -142,7 +142,7 @@ tureko/
 
 ---
 
-## 🌐 Deploying to Render
+## Deploying to Render
 
 1. Push your code to GitHub (ensure `.env` is in `.gitignore`)
 2. Create a new **Web Service** on [render.com](https://render.com)
@@ -153,7 +153,7 @@ tureko/
 
 ---
 
-## 📄 Pages
+## Pages
 
 | Route | Description |
 |---|---|
@@ -164,7 +164,7 @@ tureko/
 
 ---
 
-## 🎨 Design System
+## Design System
 
 - **Primary Color**: `#1a5c2e` (Deep Green)
 - **Accent**: `#4caf50` (Light Green)
@@ -174,4 +174,4 @@ tureko/
 
 ---
 
-Built with ❤️ for a climate-responsible future.
+

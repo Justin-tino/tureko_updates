@@ -1,0 +1,65 @@
+<%- include('partials/header') %>
+
+<section class="auth-page">
+  <div class="platform-container">
+    <div class="platform-header reveal">
+      <a href="/dashboard" class="platform-back">← Dashboard</a>
+      <h1>Settings</h1>
+      <p class="platform-subtitle">Manage your account preferences</p>
+    </div>
+
+    <% if (typeof success !== 'undefined' && success) { %>
+    <div class="platform-alert platform-alert-success reveal"><%= success %></div>
+    <% } %>
+
+    <form method="POST" action="/settings" class="platform-form reveal reveal-delay">
+      <div class="settings-section">
+        <h3>Account Information</h3>
+        <div class="settings-info">
+          <div class="settings-row">
+            <span class="settings-label">Email</span>
+            <span class="settings-value"><%= user.email %></span>
+          </div>
+          <div class="settings-row">
+            <span class="settings-label">Role</span>
+            <span class="settings-value"><span class="role-badge role-<%= user.role %>"><%= user.role === 'business' ? 'Business' : 'Applicant' %></span></span>
+          </div>
+        </div>
+      </div>
+
+      <div class="settings-section">
+        <h3>Notification Preferences</h3>
+        <div class="settings-toggles">
+          <label class="settings-toggle">
+            <input type="checkbox" name="notifyEmail" <%= (profile.notifications && profile.notifications.email) ? 'checked' : '' %> />
+            <span class="toggle-slider"></span>
+            <div class="toggle-text">
+              <strong>Email Notifications</strong>
+              <span>Receive updates about your account via email</span>
+            </div>
+          </label>
+          <label class="settings-toggle">
+            <input type="checkbox" name="notifyApplications" <%= (profile.notifications && profile.notifications.applications) ? 'checked' : '' %> />
+            <span class="toggle-slider"></span>
+            <div class="toggle-text">
+              <strong>Application Updates</strong>
+              <span><%= user.role === 'business' ? 'Get notified when someone applies' : 'Get notified when application status changes' %></span>
+            </div>
+          </label>
+        </div>
+      </div>
+
+      <div class="settings-section">
+        <h3>Security</h3>
+        <p class="settings-hint">Password management is handled through Firebase. Use the "Forgot Password" option on the sign-in page to reset your password.</p>
+        <a href="/signin" class="btn-outline">Go to Sign In</a>
+      </div>
+
+      <div class="form-actions">
+        <button type="submit" class="btn-submit">Save Settings</button>
+      </div>
+    </form>
+  </div>
+</section>
+
+<%- include('partials/footer') %>

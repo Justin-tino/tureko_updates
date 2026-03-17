@@ -10,6 +10,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="/css/style.css" />
+  <link rel="stylesheet" href="/css/auth.css" />
 </head>
 <body>
   <!-- Opening animation (only on first load) -->
@@ -32,6 +33,38 @@
         <li><a href="/services" class="nav-link">Services</a></li>
         <li><a href="/quote" class="nav-link">Request a Quote</a></li>
         <li><a href="/careers" class="nav-link">Become Us</a></li>
+        <% if (typeof user !== 'undefined' && user) { %>
+          <li class="nav-user-wrap">
+            <a href="/profile" class="nav-user-btn" aria-label="Go to profile">
+              <% if (user.picture) { %>
+                <img src="<%= user.picture %>" alt="" class="nav-user-avatar" referrerpolicy="no-referrer" />
+              <% } else { %>
+                <span class="nav-user-initial"><%= user.name.charAt(0).toUpperCase() %></span>
+              <% } %>
+            </a>
+            <button class="nav-dropdown-toggle" id="navUserBtn" aria-label="Open menu">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="14" height="14"><polyline points="6 9 12 15 18 9"/></svg>
+            </button>
+            <div class="nav-user-dropdown" id="navUserDropdown">
+              <div class="nav-user-info">
+                <strong><%= user.name %></strong>
+                <span><%= user.email %></span>
+              </div>
+              <div class="nav-user-divider"></div>
+              <a href="/profile" class="nav-user-link">My Profile</a>
+              <a href="/dashboard" class="nav-user-link">Dashboard</a>
+              <a href="/jobs" class="nav-user-link">Jobs</a>
+              <a href="/applications" class="nav-user-link">Applications</a>
+              <div class="nav-user-divider"></div>
+              <a href="/settings" class="nav-user-link">Settings</a>
+              <form action="/auth/session-logout" method="POST" class="nav-logout-form">
+                <button type="submit" class="nav-user-link nav-logout-btn">Sign Out</button>
+              </form>
+            </div>
+          </li>
+        <% } else { %>
+          <li><a href="/signin" class="nav-cta nav-signin-cta">Sign In</a></li>
+        <% } %>
         <li><a href="/quote" class="nav-cta">Get Started</a></li>
       </ul>
     </div>

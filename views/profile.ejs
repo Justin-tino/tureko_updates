@@ -1,0 +1,140 @@
+<%- include('partials/header') %>
+
+<section class="auth-page">
+  <div class="platform-container">
+    <div class="platform-header reveal">
+      <a href="/dashboard" class="platform-back">← Dashboard</a>
+      <h1>My Profile</h1>
+      <p class="platform-subtitle"><%= user.role === 'business' ? 'Company information' : 'Personal information & skills' %></p>
+    </div>
+
+    <% if (typeof success !== 'undefined' && success) { %>
+    <div class="platform-alert platform-alert-success reveal"><%= success %></div>
+    <% } %>
+
+    <form method="POST" action="/profile" class="platform-form reveal reveal-delay">
+
+      <% if (user.role === 'applicant') { %>
+
+      <div class="form-grid">
+        <div class="form-group">
+          <label for="name">Full Name *</label>
+          <input type="text" id="name" name="name" value="<%= profile.name || user.name %>" required />
+        </div>
+        <div class="form-group">
+          <label for="phone">Phone</label>
+          <input type="tel" id="phone" name="phone" value="<%= profile.phone || '' %>" placeholder="+63 912 345 6789" />
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="location">Location *</label>
+        <input type="text" id="location" name="location" value="<%= profile.location || '' %>" placeholder="Manila, Philippines" />
+      </div>
+
+      <div class="form-group">
+        <label for="bio">Bio *</label>
+        <textarea id="bio" name="bio" rows="4" placeholder="Tell employers about yourself and what you're passionate about..."><%= profile.bio || '' %></textarea>
+      </div>
+
+      <div class="form-group">
+        <label for="skills">Skills * <span class="form-hint">(comma separated, max 15)</span></label>
+        <input type="text" id="skills" name="skills" value="<%= (profile.skills || []).join(', ') %>" placeholder="ESG Reporting, Carbon Accounting, Sustainability Consulting" />
+      </div>
+
+      <div class="form-grid">
+        <div class="form-group">
+          <label for="experience">Experience</label>
+          <select id="experience" name="experience">
+            <option value="">Select...</option>
+            <option value="entry" <%= profile.experience === 'entry' ? 'selected' : '' %>>Entry Level (0-1 years)</option>
+            <option value="junior" <%= profile.experience === 'junior' ? 'selected' : '' %>>Junior (1-3 years)</option>
+            <option value="mid" <%= profile.experience === 'mid' ? 'selected' : '' %>>Mid-Level (3-5 years)</option>
+            <option value="senior" <%= profile.experience === 'senior' ? 'selected' : '' %>>Senior (5-10 years)</option>
+            <option value="expert" <%= profile.experience === 'expert' ? 'selected' : '' %>>Expert (10+ years)</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="availability">Availability</label>
+          <select id="availability" name="availability">
+            <option value="">Select...</option>
+            <option value="immediate" <%= profile.availability === 'immediate' ? 'selected' : '' %>>Immediately available</option>
+            <option value="2_weeks" <%= profile.availability === '2_weeks' ? 'selected' : '' %>>Within 2 weeks</option>
+            <option value="1_month" <%= profile.availability === '1_month' ? 'selected' : '' %>>Within 1 month</option>
+            <option value="not_available" <%= profile.availability === 'not_available' ? 'selected' : '' %>>Not actively looking</option>
+          </select>
+        </div>
+      </div>
+
+      <% } else if (user.role === 'business') { %>
+
+      <div class="form-grid">
+        <div class="form-group">
+          <label for="name">Contact Person *</label>
+          <input type="text" id="name" name="name" value="<%= profile.name || user.name %>" required />
+        </div>
+        <div class="form-group">
+          <label for="companyName">Company Name *</label>
+          <input type="text" id="companyName" name="companyName" value="<%= profile.companyName || '' %>" required placeholder="GreenTech Solutions" />
+        </div>
+      </div>
+
+      <div class="form-grid">
+        <div class="form-group">
+          <label for="industry">Industry</label>
+          <select id="industry" name="industry">
+            <option value="">Select...</option>
+            <option value="Renewable Energy" <%= profile.industry === 'Renewable Energy' ? 'selected' : '' %>>Renewable Energy</option>
+            <option value="Sustainable Agriculture" <%= profile.industry === 'Sustainable Agriculture' ? 'selected' : '' %>>Sustainable Agriculture</option>
+            <option value="Green Construction" <%= profile.industry === 'Green Construction' ? 'selected' : '' %>>Green Construction</option>
+            <option value="Environmental Consulting" <%= profile.industry === 'Environmental Consulting' ? 'selected' : '' %>>Environmental Consulting</option>
+            <option value="Waste Management" <%= profile.industry === 'Waste Management' ? 'selected' : '' %>>Waste Management</option>
+            <option value="Clean Technology" <%= profile.industry === 'Clean Technology' ? 'selected' : '' %>>Clean Technology</option>
+            <option value="Carbon Markets" <%= profile.industry === 'Carbon Markets' ? 'selected' : '' %>>Carbon Markets</option>
+            <option value="Ecotourism" <%= profile.industry === 'Ecotourism' ? 'selected' : '' %>>Ecotourism</option>
+            <option value="Other" <%= profile.industry === 'Other' ? 'selected' : '' %>>Other</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="companySize">Company Size</label>
+          <select id="companySize" name="companySize">
+            <option value="">Select...</option>
+            <option value="1-10" <%= profile.companySize === '1-10' ? 'selected' : '' %>>1-10 employees</option>
+            <option value="11-50" <%= profile.companySize === '11-50' ? 'selected' : '' %>>11-50 employees</option>
+            <option value="51-200" <%= profile.companySize === '51-200' ? 'selected' : '' %>>51-200 employees</option>
+            <option value="200+" <%= profile.companySize === '200+' ? 'selected' : '' %>>200+ employees</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="location">Location *</label>
+        <input type="text" id="location" name="location" value="<%= profile.location || '' %>" placeholder="Cebu City, Philippines" />
+      </div>
+
+      <div class="form-group">
+        <label for="description">Company Description *</label>
+        <textarea id="description" name="description" rows="4" placeholder="Tell applicants about your company's mission and sustainability efforts..."><%= profile.description || '' %></textarea>
+      </div>
+
+      <div class="form-grid">
+        <div class="form-group">
+          <label for="website">Website</label>
+          <input type="url" id="website" name="website" value="<%= profile.website || '' %>" placeholder="https://yourcompany.com" />
+        </div>
+        <div class="form-group">
+          <label for="phone">Phone</label>
+          <input type="tel" id="phone" name="phone" value="<%= profile.phone || '' %>" placeholder="+63 32 123 4567" />
+        </div>
+      </div>
+
+      <% } %>
+
+      <div class="form-actions">
+        <button type="submit" class="btn-submit">Save Profile</button>
+      </div>
+    </form>
+  </div>
+</section>
+
+<%- include('partials/footer') %>
